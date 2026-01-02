@@ -1,0 +1,10 @@
+phidata
+python-dotenv
+sqlalchemy
+psycopg[binary]
+pgvector
+pypdf
+typer
+google
+groq
+google-generativeai
