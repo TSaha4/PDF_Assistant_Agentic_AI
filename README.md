@@ -7,6 +7,8 @@ It allows you to load PDF documents into a vector database and query them intera
 
 The project uses **PostgreSQL with pgvector** via **Docker** for vector storage and has been updated to handle embedding dimension mismatches.
 
+Huge thanks to Krish Nair course for showing me the ropes.
+
 ---
 
 ## Features
@@ -112,33 +114,4 @@ PDF_Assistant/
 ├─ .env
 ├─ README.md
 └─ venv/
-```
-
-## Git Ignore
-
-Create a `.gitignore` file with the following contents:
-```
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.env
-
-# Virtual environment
-venv/
-env/
-
-# Logs
-*.log
-
-# IDE settings
-.vscode/
-.idea/
-*.sublime-project
-*.sublime-workspace
-
-# Docker
-pgvolume/
-*.dockerfile
 ```
