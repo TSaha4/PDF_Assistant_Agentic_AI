@@ -5,7 +5,7 @@
 This project is a PDF-based knowledge assistant built using **Phi**, **PgVector**, and **Groq API**.  
 It allows you to load PDF documents into a vector database and query them interactively through a CLI assistant.
 
-The project has been updated to run PostgreSQL with **pgvector** using **Docker**.
+The project uses **PostgreSQL with pgvector** via **Docker** for vector storage and has been updated to handle embedding dimension mismatches.
 
 ---
 
@@ -75,6 +75,24 @@ Verify Docker container is running:
 docker ps
 ```
 
+## Important Docker/Database Changes
+
+During development, we encountered embedding dimension mismatches because the previous table stored embeddings with 1536 dimensions, while the new embeddings (GeminiEmbedder) have 768 dimensions.
+
+To fix this:
+
+1. Drop the old table in PostgreSQL:
+```sql
+-- Connect to the database
+\c ai
+-- Drop the old table
+DROP TABLE ai.recipes;
+```
+
+2. Restart the assistant. It will recreate the table automatically with the correct embedding dimensions.
+
+This ensures the vector database works correctly with the new embeddings and avoids `expected 1536 dimensions, not 768` errors.
+
 ## Usage
 
 Run the assistant:
@@ -85,16 +103,6 @@ python assistant.py
 * The assistant will read the PDF(s) in `knowledge_base`.
 * Interact with the assistant via CLI.
 * Supports searching knowledge base and remembering previous sessions.
-
-## Notes
-
-* The previous version used OpenAI API, now switched to Groq API (free tier available).
-* PostgreSQL database should be running before executing the assistant.
-* If you update embeddings (e.g., using GeminiEmbedder), you may need to drop and recreate the vector table to avoid dimension mismatches.
-```sql
--- Example: drop table in psql
-DROP TABLE ai.recipes;
-```
 
 ## Project Structure
 ```
@@ -108,10 +116,29 @@ PDF_Assistant/
 
 ## Git Ignore
 
-* Virtual environment
-* `.env`
-* Logs
-* Cache files
-* Docker overrides
+Create a `.gitignore` file with the following contents:
+```
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
 
-Refer to `.gitignore` for details.
+# Virtual environment
+venv/
+env/
+
+# Logs
+*.log
+
+# IDE settings
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Docker
+pgvolume/
+*.dockerfile
+```
